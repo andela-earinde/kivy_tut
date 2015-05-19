@@ -1,7 +1,15 @@
-<Label>
+<Label>:
     font_name: 'Roboto'
     font_size: 60
     markup: True
+
+<RobotoButton@Button>:
+    font_name: 'Roboto'
+    font_size: 25
+    bold: True
+    background_normal: 'button_normal.png'
+    background_down: 'button_down.png'
+    border: (2, 2, 2, 2)
 
 ClockLayout:
     orientation: 'vertical'
@@ -18,17 +26,17 @@ ClockLayout:
         spacing: 20
         size_int: (1, None)
 
-        Button:
+        RobotoButton:
+            id: start_stop
             text: 'Start'
-            font_name: 'Roboto'
-            font_size: 25
-            bold: True
+            on_press: app.start_stop()
 
-        Button:
+        RobotoButton:
+            id: reset
             text: 'Reset'
-            font_name: 'Roboto'
-            font_size: 25
-            bold: True
+            background_normal: 'red_button_normal.png'
+            background_down: 'red_button_down.png'
+            on_press: app.reset()
 
     Label:
         id: stopwatch
