@@ -5,3 +5,22 @@
         top: root.top 
         width: 80
         height: 40
+        on_release: root.clear_canvas()
+
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 3
+        spacing: 3
+        x: 0
+        y: 0
+        width: root.width
+        height: 40
+
+        RadioButton:
+            group: 'color'
+            text: 'Red'
+
+        RadioButton:
+            group: 'color'
+            text: 'Blue'
+            state: 'down'
