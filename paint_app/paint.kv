@@ -1,3 +1,10 @@
+<ColorButton@RadioButton>
+    group: 'color'
+    on_release: app.canvas_widget.set_color(self.background_color)
+    background_normal: 'color_button_normal.png'
+    background_down: 'color_button_down.png'
+    border: (3, 3, 3, 3)
+
 <CanvasWidget>:
     Button:
         text: 'Delete'
