@@ -7,23 +7,59 @@ from kivy.config import Config
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.uix.togglebutton import ToggleButton
 
+CURSOR = (
+    '       @@@@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @@@@             ',
+    '                        ',
+    '@@@@@@ @@@@ @@@@@@      ',
+    '@----@ @--@ @----@      ',
+    '@----@ @--@ @----@      ',
+    '@@@@@@ @@@@ @@@@@@      ',
+    '                        ',
+    '       @@@@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @--@             ',
+    '       @@@@             ',
+    '                        ',
+    '                        ',
+    '                        ',
+    '                        ',
+    '                        ',
+    '                        ',
+)
+
 class RadioButton(ToggleButton):
     def _do_press(self):
         if self.state == 'normal':
             ToggleButtonBehavior._do_press(self)
 
 class CanvasWidget(Widget):
+    line_width = 2
     def on_touch_down(self, touch):
         if Widget.on_touch_down(self, touch):
             return 
         with self.canvas:
-            Color(*get_color_from_hex('#0080FF80'))
             touch.ud['current_line'] = Line(
-                points=(touch.x, touch.y), width=2)
+                points=(touch.x, touch.y), width=self.line_width)
 
     def on_touch_move(self, touch):
         if 'current_line' in touch.ud:
             touch.ud['current_line'].points += (touch.x, touch.y)
+
+    def set_color(self, new_color):
+        self.last_color = new_color
+        self.canvas.add(Color(*new_color))
+
+    def set_line_width(self, line_width='Normal'):
+        self.line_width = {
+            'Thin': 1, 'Normal': 2, 'Thick': 4
+        }[line_width]
 
     def clear_canvas(self):
         saved = self.children[:]
@@ -31,6 +67,7 @@ class CanvasWidget(Widget):
         self.canvas.clear()
         for widget in saved:
             self.add_widget(widget)
+        self.set_color(self.last_color)
 
 class PaintApp(App):
     def build(self):
@@ -43,7 +80,34 @@ class PaintApp(App):
             except:
                 pass
 
-        return CanvasWidget()
+        self.canvas_widget = CanvasWidget()
+        self.canvas_widget.set_color(
+            get_color_from_hex('#2980B9'))
+        
+        return self.canvas_widget 
+
+def pygame_compile_cursor(black='@', white='-'):
+    aa, bb = [], []
+    a = b = 0
+    i = 8
+    for s in CURSOR:
+        for c in s:
+            a <<= 1
+            b <<= 1
+            i -= 1
+            if c == black:
+                a |= 1
+                b |= 1
+            elif c == white:
+                b |= 1
+
+            if not i:
+                aa.append(a)
+                bb.append(b)
+                a = b = 0
+                i = 8
+
+    return tuple(aa), tuple(bb)
 
 
 if __name__ == "__main__":
